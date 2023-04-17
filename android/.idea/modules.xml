@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/26169984/android.reactive_ble_mobile.iml" filepath="$PROJECT_DIR$/.idea/modules/26169984/android.reactive_ble_mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/412341774/com.baseflow.permissionhandler.android.permission_handler_android.iml" filepath="$PROJECT_DIR$/.idea/modules/412341774/com.baseflow.permissionhandler.android.permission_handler_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-476046779/io.flutter.plugins.pathprovider.android.path_provider_android.iml" filepath="$PROJECT_DIR$/.idea/modules/-476046779/io.flutter.plugins.pathprovider.android.path_provider_android.iml" />
+    </modules>
+  </component>
+</project>
