@@ -16,7 +16,7 @@ class BleScanner implements ReactiveState<BleScannerState> {
   final StreamController<BleScannerState> _stateStreamController =
       StreamController();
 
-  final TimeQueue<DiscoveredDevice> _devices = TimeQueue(2000);
+  final TimeQueue<DiscoveredDevice> _devices = TimeQueue(5000);
   Map<String, DiscoveredDevice> oldDevice = {}; //上一次设备
 
   @override
@@ -27,7 +27,7 @@ class BleScanner implements ReactiveState<BleScannerState> {
     _subscription?.cancel();
     _subscription =
         _ble.scanForDevices(withServices: serviceIds).listen((device) {
-      _devices.push(device);
+      _devices.push(device, device.id);
       _pushState();
     }, onError: (Object e) => _logMessage('Device scan fails with error: $e'));
     _pushState();
@@ -77,27 +77,40 @@ class TimeQueue<T> {
 
   TimeQueue(this.availableTime);
 
-  push(Object e) {
-    list.add(TimeQueueModel(e));
-    tidy();
+  push(Object e, String id) {
+    // final old = (list as List<TimeQueueModel?>)
+    //     .firstWhere((element) => element!.id == id, orElse: () => null);
+    // list.add(TimeQueueModel(e, id));
+    TimeQueueModel? old = null;
+    for (final e in list) {
+      if (e.id == id) {
+        old = e;
+        break;
+      }
+    }
+    if (old == null) {
+      list.add(TimeQueueModel(e, id));
+    }
+    // list.remove(old);
+    // list.add(TimeQueueModel(e, id));
+    // tidy();
   }
 
   List<T> getList(double time) {
-    final timestamp = DateTime.now()
-        .subtract(Duration(milliseconds: availableTime))
-        .millisecondsSinceEpoch;
-
-    final lists = list.where((element) => element.time >= timestamp);
-    return lists.map((e) {
+    // final timestamp = DateTime.now().millisecondsSinceEpoch - time;
+    // final lists = list.where((element) => element.time >= timestamp);
+    return list.map((e) {
       return e.elemet as T;
     }).toList();
+    // return list;
   }
 
   tidy() {
-    final time = DateTime.now()
-        .subtract(Duration(milliseconds: availableTime))
-        .millisecondsSinceEpoch;
-    list = list.where((element) => element.time >= time).toList();
+    final time = DateTime.now().millisecondsSinceEpoch - availableTime;
+    // list = list.where((element) {
+    //   return element.time >= time;
+    // }).toList();
+    return list;
   }
 
   clear() {
@@ -106,11 +119,21 @@ class TimeQueue<T> {
 }
 
 class TimeQueueModel {
-  late final int time; //ms
+  late int time; //ms
+  final String id;
   final Object elemet;
 
-  TimeQueueModel(this.elemet) {
+  TimeQueueModel(this.elemet, this.id) {
     time = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  @override
+  bool operator ==(other) {
+    // 判断是否是非
+    if (other is! TimeQueueModel) {
+      return false;
+    }
+    return id == (other).time;
   }
 }
 

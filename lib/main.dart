@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'provider/ble/ble_scanner.dart';
 
-const _themeColor = Colors.lightGreen;
+const _themeColor = Colors.blue;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -61,7 +61,9 @@ void main() {
     child: MaterialApp(
       title: 'Flutter Reactive BLE example',
       color: _themeColor,
-      theme: ThemeData(primarySwatch: _themeColor),
+      theme: ThemeData(
+        primarySwatch: _themeColor,
+      ),
       home: const HomeScreen(),
       builder: EasyLoading.init(),
     ),

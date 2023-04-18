@@ -8,7 +8,7 @@ class HelpStyle {
   }
 
   static TextStyle get contextStyle {
-    return const TextStyle(color: Colors.black54, fontSize: 14);
+    return const TextStyle(color: Colors.black54, fontSize: 16);
   }
 
   static TextStyle get ptitleStyle {

@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:bluesun/blue/check_premission.dart';
 import 'package:bluesun/help_style.dart';
 import 'package:bluesun/page/blue_scan_screen.dart';
@@ -26,34 +27,42 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("我的设备"),
+      appBar: AppBar(
+        title: const Text(
+          "我的设备",
         ),
-        body: Consumer<DeviceManger>(builder: ((context, deviceManger, child) {
-          final blueModel = deviceManger.blueModel;
-          datas = blueModel?.mssage;
-          if (blueModel == null) {
-            return _nullBlue();
-          } else if (blueModel.connectionState ==
-              DeviceConnectionState.disconnected) {
-            return _disconnect();
-          } else if (blueModel.connectionState ==
-              DeviceConnectionState.connecting) {
-            return _connecting();
-          } else if (datas?.isEmpty ?? true) {
-            return _waitBlueData();
-          } else {
-            return _gridView();
-          }
-        })),
-        floatingActionButton: TextButton(
-            onPressed: () => {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const BlueScanScreen()),
-                  )
-                },
-            child: Text("蓝牙已连接")));
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const BlueScanScreen()),
+              );
+            },
+            child: Text(
+              "蓝牙设置",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          )
+        ],
+      ),
+      body: Consumer<DeviceManger>(builder: ((context, deviceManger, child) {
+        final blueModel = deviceManger.blueModel;
+        datas = blueModel?.mssage?.map((e) => e).cast<int>().toList();
+        if (blueModel == null) {
+          return _nullBlue();
+        } else if (blueModel.connectionState ==
+            DeviceConnectionState.disconnected) {
+          return _disconnect(blueModel.name);
+        } else if (blueModel.connectionState ==
+            DeviceConnectionState.connecting) {
+          return _connecting();
+        } else if (datas?.isEmpty ?? true) {
+          return _waitBlueData();
+        } else {
+          return _gridView();
+        }
+      })),
+    );
   }
 
   Widget _gridView() {
@@ -88,19 +97,28 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
-  Widget _disconnect() {
-    return box(Text("未发现XX蓝牙，请手动选择蓝牙"));
+  Widget _disconnect(String title) {
+    return box(Text(
+      "未发现$title蓝牙，请手动选择蓝牙",
+      style: HelpStyle.titleStyle,
+    ));
   }
 
 //之前已连接过，现在未发现
   Widget _waitBlueData() {
-    return box(Text("已连接等待数据"));
+    return box(Text(
+      "已连接等待数据",
+      style: HelpStyle.titleStyle,
+    ));
   }
 
 //从来没有连过蓝牙
   Widget _nullBlue() {
     return box(
-      Text("蓝牙未连接，请连接"),
+      Text(
+        "蓝牙未连接，请连接",
+        style: HelpStyle.titleStyle,
+      ),
     );
   }
 
@@ -129,7 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Color colorFrom(int data) {
-    return HSVColor.fromAHSV(1.0, 320.0, 0.1 + (data / 255) * 0.8, 1.0)
-        .toColor();
+    final value = max(min((data - 1800) / (3700 - 1800), 1.0), 0);
+
+    return HSVColor.fromAHSV(1.0, 170.0, 0.1 + value * 0.8, 1.0).toColor();
   }
 }

@@ -110,7 +110,7 @@ packages:
       name: flutter_reactive_ble
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.2"
   flutter_spinkit:
     dependency: transitive
     description:
@@ -311,14 +311,14 @@ packages:
       name: reactive_ble_mobile
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.2"
   reactive_ble_platform_interface:
     dependency: transitive
     description:
       name: reactive_ble_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.2"
   sky_engine:
     dependency: transitive
     description: flutter

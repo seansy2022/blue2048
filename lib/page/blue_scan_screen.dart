@@ -1,4 +1,5 @@
 import 'package:bluesun/comp/scan_item.dart';
+import 'package:bluesun/help_style.dart';
 import 'package:bluesun/model/blue_model.dart';
 import 'package:bluesun/model/blue_state.dart';
 import 'package:bluesun/provider/ble/ble_scanner.dart';
@@ -32,7 +33,10 @@ class _BlueScanScreenState extends State<BlueScanScreen> {
   }
 
   mineWidget() {
-    return Text("我的设备");
+    return Text(
+      "我的设备",
+      style: HelpStyle.contextStyle,
+    );
   }
 
   get connetedBlue {
@@ -40,14 +44,23 @@ class _BlueScanScreenState extends State<BlueScanScreen> {
         builder: (_, deviceManger, bleScannerState, __) {
       final device = deviceManger.blueModel;
 
-      final discoveredDevice = bleScannerState?.discoveredDevices
-          .firstWhere((element) => element.id == device?.deviceId);
-
+      DiscoveredDevice? discoveredDevice = null;
+      if (bleScannerState != null) {
+        for (final element in bleScannerState.discoveredDevices) {
+          if (element.id == device?.deviceId) {
+            discoveredDevice = element;
+            break;
+          }
+        }
+      }
       return device == null
           ? Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               alignment: Alignment.center,
-              child: Text("暂无设备"),
+              child: Text(
+                "暂无设备",
+                style: HelpStyle.contextStyle,
+              ),
             )
           : ScanItem(
               blueId: device.deviceId,
@@ -89,7 +102,10 @@ class _BlueScanScreenState extends State<BlueScanScreen> {
   loading() {
     return Row(
       children: [
-        Text("其他设备"),
+        Text(
+          "其他设备",
+          style: HelpStyle.contextStyle,
+        ),
         SizedBox(width: 12),
         CupertinoActivityIndicator(),
       ],
@@ -106,30 +122,36 @@ class _BlueScanScreenState extends State<BlueScanScreen> {
         }
         final devices = _filterBlue(
             bleScannerState?.discoveredDevices, deviceManger.blueModel);
-        return CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: mineWidget(),
-            ),
-            SliverToBoxAdapter(
-              child: connetedBlue,
-            ),
-            SliverToBoxAdapter(
-              child: loading(),
-            ),
-            SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                final device = devices![index];
-                return ScanItem(
-                  blueId: device.id,
-                  ontap: () => connect(context, device),
-                  name: device.name,
-                  state: BlueConnectState.disconnect,
-                );
-              }, childCount: devices?.length),
-            ),
-          ],
+        return Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: mineWidget(),
+              ),
+              SliverToBoxAdapter(
+                child: connetedBlue,
+              ),
+              SliverToBoxAdapter(
+                child: loading(),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 8),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  final device = devices![index];
+                  return ScanItem(
+                    blueId: device.id,
+                    ontap: () => connect(context, device),
+                    name: device.name,
+                    state: BlueConnectState.disconnect,
+                  );
+                }, childCount: devices?.length),
+              ),
+            ],
+          ),
         );
       },
     );

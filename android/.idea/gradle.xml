@@ -9,14 +9,13 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$/../../../flutter/.pub-cache/hosted/pub.flutter-io.cn/path_provider_android-2.0.25/android" />
+            <option value="$PROJECT_DIR$/../../../flutter/.pub-cache/hosted/pub.flutter-io.cn/permission_handler_android-10.2.0/android" />
+            <option value="$PROJECT_DIR$/../../../flutter/.pub-cache/hosted/pub.flutter-io.cn/reactive_ble_mobile-5.0.2/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.21/android" />
-            <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/permission_handler_android-10.2.0/android" />
-            <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/reactive_ble_mobile-5.0.2/android" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

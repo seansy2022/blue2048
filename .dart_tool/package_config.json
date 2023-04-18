@@ -93,7 +93,7 @@
     },
     {
       "name": "flutter_reactive_ble",
-      "rootUri": "file:///Users/sean/work/flutter/.pub-cache/hosted/pub.flutter-io.cn/flutter_reactive_ble-5.0.3",
+      "rootUri": "file:///Users/sean/work/flutter/.pub-cache/hosted/pub.flutter-io.cn/flutter_reactive_ble-5.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -267,13 +267,13 @@
     },
     {
       "name": "reactive_ble_mobile",
-      "rootUri": "file:///Users/sean/work/flutter/.pub-cache/hosted/pub.flutter-io.cn/reactive_ble_mobile-5.0.3",
+      "rootUri": "file:///Users/sean/work/flutter/.pub-cache/hosted/pub.flutter-io.cn/reactive_ble_mobile-5.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "reactive_ble_platform_interface",
-      "rootUri": "file:///Users/sean/work/flutter/.pub-cache/hosted/pub.flutter-io.cn/reactive_ble_platform_interface-5.0.3",
+      "rootUri": "file:///Users/sean/work/flutter/.pub-cache/hosted/pub.flutter-io.cn/reactive_ble_platform_interface-5.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -350,7 +350,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-04-17T01:31:00.644667Z",
+  "generated": "2023-04-18T01:38:36.336173Z",
   "generator": "pub",
   "generatorVersion": "2.17.0"
 }

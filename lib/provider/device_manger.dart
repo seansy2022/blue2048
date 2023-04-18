@@ -18,7 +18,7 @@ class DeviceManger extends ChangeNotifier {
   BlueModel? blueModel;
   final blueDb = BlueMessageDB();
   Timer? _timer;
-  List<int>? _receivedMessage;
+  List<int>? _receivedMessage = [];
   StreamSubscription? _stream;
   DeviceManger({
     required this.connectors,
@@ -86,16 +86,18 @@ class DeviceManger extends ChangeNotifier {
     message ??= [];
     message.addAll(datas);
 
-    _timer = Timer(const Duration(milliseconds: 100), () {
-      updateModel(mssage: json.decode(utf8.decode(_receivedMessage!)));
-      _timer?.cancel();
+    _timer = Timer(const Duration(milliseconds: 200), () {
+      final str = utf8.decode(_receivedMessage!);
       _receivedMessage?.clear();
+
+      updateModel(mssage: json.decode(str)["RES"]);
+      _timer?.cancel();
     });
   }
 
   updateModel({
     DeviceConnectionState? state,
-    List<int>? mssage,
+    List? mssage,
     String? alias,
     String? serverId,
   }) {
