@@ -20,7 +20,7 @@ class BlueModel {
       this.alias});
 
   DeviceConnectionState? connectionState;
-  String? mssage;
+  List<int>? mssage;
   final String deviceId;
   final String name;
   String? serverId;

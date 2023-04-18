@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:bluesun/db/blue_message_db.dart';
 import 'package:bluesun/model/blue_model.dart';
 
@@ -16,7 +17,7 @@ class DeviceManger extends ChangeNotifier {
   QualifiedCharacteristic? sendBlue;
   BlueModel? blueModel;
   final blueDb = BlueMessageDB();
-  Timer? _timerMap;
+  Timer? _timer;
   List<int>? _receivedMessage;
   StreamSubscription? _stream;
   DeviceManger({
@@ -76,14 +77,25 @@ class DeviceManger extends ChangeNotifier {
     notifyListeners();
   }
 
-  receivedMessageBuf(String deviceId, List<int> datas) {}
+  receivedMessageBuf(String deviceId, List<int> datas) {
+    final timer = _timer;
+    var message = _receivedMessage;
+    if (timer != null) {
+      timer.cancel();
+    }
+    message ??= [];
+    message.addAll(datas);
 
-  receivedMessage({required List<int> data, required String deviceId}) {}
+    _timer = Timer(const Duration(milliseconds: 100), () {
+      updateModel(mssage: json.decode(utf8.decode(_receivedMessage!)));
+      _timer?.cancel();
+      _receivedMessage?.clear();
+    });
+  }
 
-  updateModel(
-    String deviceId, {
+  updateModel({
     DeviceConnectionState? state,
-    String? mssage,
+    List<int>? mssage,
     String? alias,
     String? serverId,
   }) {
@@ -96,12 +108,12 @@ class DeviceManger extends ChangeNotifier {
 
     if (serverId != null) {
       blueModel?.serverId = serverId;
-      updateBlue(deviceId);
+      updateBlue();
     }
     notifyListeners();
   }
 
-  updateBlue(String deviceId) {
+  updateBlue() {
     if (blueModel != null) {
       blueDb.addDevice(blueModel!);
     }
@@ -135,7 +147,7 @@ class DeviceManger extends ChangeNotifier {
         characteristicId: characteristic.characteristicId,
         deviceId: device);
     blueModel?.qualifiedCharacteristic = qcharacteristic;
-    updateModel(device, serverId: characteristic.serviceId.toString());
+    updateModel(serverId: characteristic.serviceId.toString());
     listenCharacteristic(qcharacteristic);
   }
 
@@ -146,7 +158,7 @@ class DeviceManger extends ChangeNotifier {
   }
 
   connectionStateMseeage(ConnectionStateUpdate state) {
-    updateModel(state.deviceId, state: state.connectionState);
+    updateModel(state: state.connectionState);
     if (state.connectionState == DeviceConnectionState.connected) {
       FlutterReactiveBle().requestMtu(deviceId: state.deviceId, mtu: 128);
       subScribe(state.deviceId);
@@ -163,13 +175,6 @@ class DeviceManger extends ChangeNotifier {
       receivedMessageBuf(characteristic.deviceId, message);
     });
     _stream = scribe;
-  }
-
-  sendMessageToSendBlue(List<int> message) {
-    if (blueModel?.qualifiedCharacteristic != null) {
-      bleinteracor.writeCharacterisiticWithoutResponse(
-          blueModel!.qualifiedCharacteristic!, message);
-    }
   }
 
   sendMessage(final deviceId, List<int> message) {

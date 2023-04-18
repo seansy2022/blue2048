@@ -7,6 +7,7 @@ class ScanItem extends StatelessWidget {
   final String name;
   final String blueId;
   final VoidCallback ontap;
+  final bool disable;
   final Widget? subChild;
 
   const ScanItem(
@@ -15,11 +16,20 @@ class ScanItem extends StatelessWidget {
       required this.ontap,
       required this.name,
       required this.blueId,
+      this.disable = false,
       this.subChild})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return disable
+        ? ColorFiltered(
+            colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.color),
+            child: child())
+        : child();
+  }
+
+  Widget child() {
     bool isConnect = state == BlueConnectState.connected;
     return GestureDetector(
       onTap: isConnect ? null : ontap,

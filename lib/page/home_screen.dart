@@ -16,12 +16,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List datas;
+  List<int>? datas;
   @override
   void initState() {
     super.initState();
     CheckPermission.check();
-    datas = List<int>.generate(16, (i) => Random().nextInt(255));
   }
 
   @override
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Consumer<DeviceManger>(builder: ((context, deviceManger, child) {
           final blueModel = deviceManger.blueModel;
-
+          datas = blueModel?.mssage;
           if (blueModel == null) {
             return _nullBlue();
           } else if (blueModel.connectionState ==
@@ -41,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (blueModel.connectionState ==
               DeviceConnectionState.connecting) {
             return _connecting();
-          } else if (datas.isEmpty) {
+          } else if (datas?.isEmpty ?? true) {
             return _waitBlueData();
           } else {
             return _gridView();
@@ -66,13 +65,13 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 4,
             childAspectRatio: 1,
           ),
-          itemCount: datas.length,
+          itemCount: datas?.length ?? 0,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              color: colorFrom(datas[index]),
+              color: colorFrom(datas![index]),
               child: Center(
                   child: Text(
-                datas[index].toString(),
+                datas![index].toString(),
                 style: HelpStyle.titleStyle,
               )),
             );

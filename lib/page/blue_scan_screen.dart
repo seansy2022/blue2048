@@ -36,27 +36,41 @@ class _BlueScanScreenState extends State<BlueScanScreen> {
   }
 
   get connetedBlue {
-    return Consumer<DeviceManger>(builder: (_, deviceManger, __) {
+    return Consumer2<DeviceManger, BleScannerState?>(
+        builder: (_, deviceManger, bleScannerState, __) {
       final device = deviceManger.blueModel;
+
+      final discoveredDevice = bleScannerState?.discoveredDevices
+          .firstWhere((element) => element.id == device?.deviceId);
+
       return device == null
           ? Container(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               alignment: Alignment.center,
               child: Text("暂无设备"),
             )
           : ScanItem(
               blueId: device.deviceId,
+              disable: discoveredDevice == null,
               ontap: () {
-                // connect(context, device);
+                if (device.connectionState ==
+                        DeviceConnectionState.disconnected &&
+                    discoveredDevice != null) {
+                  connect(context, discoveredDevice);
+                }
               },
               name: device.name,
               state: BlueConnectState.disconnect,
               subChild: Row(
                 children: [
+                  if (discoveredDevice == null) Text("蓝牙扫描中..."),
                   if (device.connectionState ==
-                      DeviceConnectionState.disconnected)
+                          DeviceConnectionState.disconnected &&
+                      discoveredDevice != null)
                     Text("未连接"),
-                  if (device.connectionState == DeviceConnectionState.connected)
+                  if (device.connectionState ==
+                          DeviceConnectionState.connected &&
+                      discoveredDevice != null)
                     Text("已连接"),
                   if (device.connectionState ==
                       DeviceConnectionState.connecting)
