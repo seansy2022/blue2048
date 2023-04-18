@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "我的设备",
+          "电阻测量仪（unit：Ω）",
         ),
         actions: [
           TextButton(
@@ -78,11 +78,22 @@ class _HomeScreenState extends State<HomeScreen> {
           itemBuilder: (BuildContext context, int index) {
             return Container(
               color: colorFrom(datas![index]),
-              child: Center(
-                  child: Text(
-                datas![index].toString(),
-                style: HelpStyle.titleStyle,
-              )),
+              child: Stack(
+                children: [
+                  Positioned(
+                      top: 12,
+                      left: 12,
+                      child: Text(
+                        index_map(index),
+                        style: HelpStyle.contextStyle,
+                      )),
+                  Center(
+                      child: Text(
+                    datas![index].toString(),
+                    style: HelpStyle.titleStyle,
+                  )),
+                ],
+              ),
             );
           }),
     );
@@ -149,6 +160,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Color colorFrom(int data) {
     final value = max(min((data - 1800) / (3700 - 1800), 1.0), 0);
 
-    return HSVColor.fromAHSV(1.0, 170.0, 0.1 + value * 0.8, 1.0).toColor();
+    return HSVColor.fromAHSV(1.0, 210.0, 0.1 + value * 0.9, 1.0).toColor();
+  }
+
+  String index_map(int index) {
+    final pai = (index) ~/ 4;
+    final ge = index % 4;
+
+    final newIndex = ge * 4 + (pai);
+    return newIndex.toString();
   }
 }
