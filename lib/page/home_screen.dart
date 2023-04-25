@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Consumer<DeviceManger>(builder: ((context, deviceManger, child) {
         final blueModel = deviceManger.blueModel;
         final message = deviceManger.messageModel.showData();
-        final colors = deviceManger.messageModel.res;
+        final colors = deviceManger.messageModel.colors();
         final resistances = deviceManger.messageModel.res;
 
         datas = message;
@@ -197,9 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Color colorFrom(int data) {
-    final value = max(min((data - 1800) / (3700 - 1800), 1.0), 0);
+    final value = max(min((data - 0) / (3 - 0), 1.0), 0);
 
-    return HSVColor.fromAHSV(1.0, 210.0, 0.1 + value * 0.9, 1.0).toColor();
+    return HSVColor.fromAHSV(1.0, 210.0, value, 1.0).toColor();
   }
 
   String index_map(int index) {
