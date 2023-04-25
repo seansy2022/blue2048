@@ -28,7 +28,7 @@ class BlueMessageDB {
     // collection.save(model);
     // final catsBox = await collection.openBox('blueMessage');
     final dateString = DateTime.now().millisecondsSinceEpoch.toString();
-    collection.put("${model.deviceId}|$dateString", json.encode(model.toJson));
+    collection.put("${model.initRes}|$dateString", json.encode(model.toJson));
   }
 
   get(String deviceId) async {

@@ -47,7 +47,7 @@
     </intent>
     </queries>
    <application
-        android:label="bluesun"
+        android:label="电阻测量仪"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

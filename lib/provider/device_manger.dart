@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:bluesun/db/blue_message_db.dart';
+import 'package:bluesun/model/blue_message_model.dart';
 import 'package:bluesun/model/blue_model.dart';
 
 import 'package:bluesun/provider/ble/ble_device_connectors.dart';
@@ -8,17 +9,19 @@ import 'package:bluesun/provider/ble/ble_device_interactor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
-const KServer = "ffe0";
-const KCharacteristic = "ffe1";
+const String KServer = "ffe0";
+const String KCharacteristic = "ffe1";
 
 class DeviceManger extends ChangeNotifier {
   final BleDeviceConnectors connectors;
   final BleDeviceInteractor bleinteracor;
   QualifiedCharacteristic? sendBlue;
   BlueModel? blueModel;
+  BlueMessageModel messageModel = BlueMessageModel(res: [], initRes: []);
+
   final blueDb = BlueMessageDB();
   Timer? _timer;
-  List<int>? _receivedMessage = [];
+  final List<int> _receivedMessage = [];
   StreamSubscription? _stream;
   DeviceManger({
     required this.connectors,
@@ -87,17 +90,16 @@ class DeviceManger extends ChangeNotifier {
     message.addAll(datas);
 
     _timer = Timer(const Duration(milliseconds: 200), () {
-      final str = utf8.decode(_receivedMessage!);
-      _receivedMessage?.clear();
-
-      updateModel(mssage: json.decode(str)["RES"]);
+      final str = utf8.decode(_receivedMessage);
+      _receivedMessage.clear();
+      updateModel(mssage: json.decode(str));
       _timer?.cancel();
     });
   }
 
   updateModel({
     DeviceConnectionState? state,
-    List? mssage,
+    Map? mssage,
     String? alias,
     String? serverId,
   }) {
@@ -105,7 +107,11 @@ class DeviceManger extends ChangeNotifier {
       blueModel?.connectionState = state;
     }
     if (mssage != null) {
-      blueModel?.mssage = mssage;
+      final resiveModel = BlueMessageModel.fromJson(mssage);
+
+      messageModel = messageModel.copyWith(
+          res: resiveModel.res, initRes: resiveModel.initRes);
+      // blueModel?.mssage = mssage;
     }
 
     if (serverId != null) {

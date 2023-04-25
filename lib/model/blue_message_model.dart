@@ -12,42 +12,40 @@ String blueMessageModelToJson(BlueMessageModel data) =>
 
 class BlueMessageModel {
   BlueMessageModel({
-    required this.date,
-    required this.deviceId,
-    required this.message,
-    required this.messageType,
+    required this.res,
+    required this.initRes,
   });
 
-  final String date;
-  final String deviceId;
-  final String message;
-  final int messageType;
+  final List res;
+  final List initRes;
 
   BlueMessageModel copyWith({
-    required String date,
-    required String deviceId,
-    required String message,
-    required int messageType,
+    List? res,
+    List? initRes,
   }) =>
       BlueMessageModel(
-        date: date ?? this.date,
-        deviceId: deviceId ?? this.deviceId,
-        message: message ?? this.message,
-        messageType: messageType ?? this.messageType,
+        res: res ?? this.res,
+        initRes: initRes ?? this.initRes,
       );
 
-  factory BlueMessageModel.fromJson(Map<String, dynamic> json) =>
-      BlueMessageModel(
-        date: json["date"],
-        deviceId: json["deviceId"],
-        message: json["message"],
-        messageType: json["messageType"],
+  factory BlueMessageModel.fromJson(Map json) => BlueMessageModel(
+        res: json["INIT_RES"] ?? [],
+        initRes: json["RES"] ?? [],
       );
 
   Map<String, dynamic> toJson() => {
-        "date": date,
-        "deviceId": deviceId,
-        "message": message,
-        "messageType": messageType,
+        "date": res,
+        "deviceId": initRes,
       };
+
+  List<String>? showData() {
+    if (res.length == initRes.length && res.isNotEmpty) {
+      initRes.asMap().forEach((k, v) {
+        final basevalue = res[k] ?? 10000;
+        return ((v / (basevalue as int) - 1) * 100).toStringAsFixed(4) + '% ';
+      });
+    }
+
+    return null;
+  }
 }

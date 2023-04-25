@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<int>? datas;
+  List<String>? datas;
   @override
   void initState() {
     super.initState();
@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "电阻测量仪（unit：Ω）",
+          "电阻测量仪",
         ),
         actions: [
           TextButton(
@@ -47,7 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Consumer<DeviceManger>(builder: ((context, deviceManger, child) {
         final blueModel = deviceManger.blueModel;
-        datas = blueModel?.mssage?.map((e) => e).cast<int>().toList();
+        final message = deviceManger.messageModel.showData();
+        final colors = deviceManger.messageModel.res;
+
+        datas = message;
         if (blueModel == null) {
           return _nullBlue();
         } else if (blueModel.connectionState ==
@@ -56,16 +59,16 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (blueModel.connectionState ==
             DeviceConnectionState.connecting) {
           return _connecting();
-        } else if (datas?.isEmpty ?? true) {
+        } else if (message?.isEmpty ?? true) {
           return _waitBlueData();
         } else {
-          return _gridView();
+          return _gridView(message!, colors);
         }
       })),
     );
   }
 
-  Widget _gridView() {
+  Widget _gridView(List contents, List colors) {
     return box(
       GridView.builder(
           padding: EdgeInsets.zero,
@@ -74,10 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 4,
             childAspectRatio: 1,
           ),
-          itemCount: datas?.length ?? 0,
+          itemCount: contents.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              color: colorFrom(datas![index]),
+              color: colorFrom(colors[index]),
               child: Stack(
                 children: [
                   Positioned(
@@ -89,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   Center(
                       child: Text(
-                    datas![index].toString(),
+                    contents[index],
                     style: HelpStyle.titleStyle,
                   )),
                 ],
