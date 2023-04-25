@@ -16,8 +16,8 @@ class BlueMessageModel {
     required this.initRes,
   });
 
-  final List res;
-  final List initRes;
+  final List? res;
+  final List? initRes;
 
   BlueMessageModel copyWith({
     List? res,
@@ -29,8 +29,8 @@ class BlueMessageModel {
       );
 
   factory BlueMessageModel.fromJson(Map json) => BlueMessageModel(
-        res: json["INIT_RES"] ?? [],
-        initRes: json["RES"] ?? [],
+        res: json["RES"],
+        initRes: json["INIT_RES"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,11 +39,14 @@ class BlueMessageModel {
       };
 
   List<String>? showData() {
-    if (res.length == initRes.length && res.isNotEmpty) {
-      initRes.asMap().forEach((k, v) {
-        final basevalue = res[k] ?? 10000;
-        return ((v / (basevalue as int) - 1) * 100).toStringAsFixed(4) + '% ';
+    if (res != null && res?.length == initRes?.length) {
+      final List<String> result = [];
+      initRes!.asMap().forEach((k, v) {
+        final basevalue = res![k] ?? 10000;
+        result.add(
+            ((v / (basevalue as int) - 1) * 100).toStringAsFixed(4) + '% ');
       });
+      return result;
     }
 
     return null;

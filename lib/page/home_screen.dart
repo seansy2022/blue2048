@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           "电阻测量仪",
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final blueModel = deviceManger.blueModel;
         final message = deviceManger.messageModel.showData();
         final colors = deviceManger.messageModel.res;
+        final resistances = deviceManger.messageModel.res;
 
         datas = message;
         if (blueModel == null) {
@@ -62,13 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (message?.isEmpty ?? true) {
           return _waitBlueData();
         } else {
-          return _gridView(message!, colors);
+          return _gridView(message!, colors, resistances);
         }
       })),
     );
   }
 
-  Widget _gridView(List contents, List colors) {
+  Widget _gridView(List contents, List? colors, List? resistances) {
     return box(
       GridView.builder(
           padding: EdgeInsets.zero,
@@ -76,25 +78,61 @@ class _HomeScreenState extends State<HomeScreen> {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
             childAspectRatio: 1,
+            crossAxisSpacing: 4,
+            mainAxisSpacing: 4,
           ),
           itemCount: contents.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              color: colorFrom(colors[index]),
+              decoration: BoxDecoration(
+                  color: colorFrom(colors![index]),
+                  borderRadius: BorderRadius.circular(6),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      spreadRadius: 1,
+                      // blurRadius: 7,
+                      offset: Offset(1, 1),
+                    )
+                  ]),
               child: Stack(
                 children: [
                   Positioned(
-                      top: 12,
-                      left: 12,
+                      top: 6,
+                      right: 6,
                       child: Text(
                         index_map(index),
                         style: HelpStyle.contextStyle,
                       )),
-                  Center(
-                      child: Text(
-                    contents[index],
-                    style: HelpStyle.titleStyle,
-                  )),
+                  Positioned(
+                      top: 6,
+                      right: 6,
+                      bottom: 6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Expanded(
+                            child: SizedBox(),
+                            flex: 1,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              resistances![index].toString() + 'Ω',
+                              style: HelpStyle.contextStyle,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              contents[index],
+                              style: HelpStyle.contextStyle.copyWith(
+                                  color: Colors.black87, fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      )),
                 ],
               ),
             );
