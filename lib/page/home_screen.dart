@@ -105,31 +105,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: HelpStyle.contextStyle,
                       )),
                   Positioned(
-                      top: 6,
-                      right: 6,
+                      top: 16,
+                      left: 6,
                       bottom: 6,
+                      right: 6,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Expanded(
-                            child: SizedBox(),
-                            flex: 1,
+                          Expanded(child: SizedBox()),
+                          Text(
+                            resistances![index].toString() + 'Ω',
+                            style: HelpStyle.contextStyle,
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              resistances![index].toString() + 'Ω',
-                              style: HelpStyle.contextStyle,
-                            ),
+                          SizedBox(
+                            height: 8,
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              contents[index],
-                              style: HelpStyle.contextStyle.copyWith(
-                                  color: Colors.black87, fontSize: 18),
-                            ),
+                          Text(
+                            contents[index],
+                            maxLines: 2,
+                            style: HelpStyle.contextStyle.copyWith(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                overflow: TextOverflow.ellipsis),
                           ),
                         ],
                       )),
